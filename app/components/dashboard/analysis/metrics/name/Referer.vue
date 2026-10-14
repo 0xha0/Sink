@@ -14,13 +14,6 @@ defineProps<{
     <Avatar
       class="size-5 shrink-0 p-0.5"
     >
-      <AvatarImage
-        :src="`https://unavatar.webp.se/${name}?fallback=false`"
-        :alt="name"
-        loading="lazy"
-        width="20"
-        height="20"
-      />
       <AvatarFallback>
         <img
           src="/icon.png"

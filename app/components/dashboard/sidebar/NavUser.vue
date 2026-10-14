@@ -31,23 +31,7 @@ const user = computed<User>(() => ({
 }))
 const avatarFallback = computed(() => user.value.name.charAt(0).toUpperCase() || 'R')
 
-watch(userEmail, async (email, _previousEmail, onCleanup) => {
-  avatarURL.value = ''
-  if (!email)
-    return
-
-  let cancelled = false
-  onCleanup(() => {
-    cancelled = true
-  })
-
-  const bytes = new TextEncoder().encode(email.trim().toLowerCase())
-  const digest = await crypto.subtle.digest('SHA-256', bytes)
-  if (!cancelled) {
-    const hash = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, '0')).join('')
-    avatarURL.value = `https://gravatar.webp.se/avatar/${hash}?d=404`
-  }
-}, { immediate: true })
+// No avatar service (it would receive a hash of the user's email): the initial is shown
 </script>
 
 <template>
