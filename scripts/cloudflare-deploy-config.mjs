@@ -70,13 +70,19 @@ if (parseErrors.length > 0) {
 const env = await loadEnv()
 const d1 = getBinding(config, 'd1_databases', 'DB')
 const kv = getBinding(config, 'kv_namespaces', 'KV')
-const analytics = getBinding(config, 'analytics_engine_datasets', 'ANALYTICS')
 
 d1.database_id = env.DEPLOY_D1_DATABASE_ID
 d1.database_name = env.DEPLOY_D1_DATABASE_NAME
 kv.id = env.DEPLOY_KV_NAMESPACE_ID
 kv.preview_id = env.DEPLOY_KV_PREVIEW_NAMESPACE_ID ?? env.DEPLOY_KV_NAMESPACE_ID
-analytics.dataset = env.DEPLOY_ANALYTICS_DATASET
+// DEPLOY_ANALYTICS_DATASET=off: no Analytics Engine binding, for an account that hasn't enabled it
+// (Cloudflare refuses the deploy otherwise); access logs are then skipped
+if (env.DEPLOY_ANALYTICS_DATASET === 'off') {
+  config.analytics_engine_datasets = (config.analytics_engine_datasets ?? []).filter(({ binding }) => binding !== 'ANALYTICS')
+}
+else {
+  getBinding(config, 'analytics_engine_datasets', 'ANALYTICS').dataset = env.DEPLOY_ANALYTICS_DATASET
+}
 
 if (env.DEPLOY_R2_BUCKET_NAME) {
   const r2 = getBinding(config, 'r2_buckets', 'R2')
