@@ -1,6 +1,6 @@
 import type { DashboardLink, DashboardLinkFormData } from '@/types/dashboard-links'
 import { isMaskedLinkPassword } from '#shared/utils/link-password'
-import { date2unix, unix2date } from './time'
+import { dateTime2unix, DEFAULT_EXPIRATION_TIME, unix2date, unix2time } from './time'
 
 export type LinkUrlValidationError
   = | { kind: 'required' }
@@ -31,6 +31,7 @@ export function createLinkFormInitialValues(link: Partial<DashboardLink>): Dashb
     comment: link.comment ?? '',
     tags: link.tags ?? [],
     expiration: link.expiration ? unix2date(link.expiration) : undefined,
+    expirationTime: link.expiration ? unix2time(link.expiration) : DEFAULT_EXPIRATION_TIME,
     google: link.google ?? '',
     apple: link.apple ?? '',
     title: link.title ?? '',
@@ -63,7 +64,7 @@ export function normalizeLinkFormSubmitPayload(value: DashboardLinkFormData, isE
     slug: value.slug,
     comment: value.comment || undefined,
     tags: value.tags,
-    expiration: value.expiration ? date2unix(value.expiration, 'end') : undefined,
+    expiration: value.expiration ? dateTime2unix(value.expiration, value.expirationTime) : undefined,
     google: value.google || undefined,
     apple: value.apple || undefined,
     title: value.title || undefined,

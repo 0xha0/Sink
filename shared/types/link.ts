@@ -16,6 +16,8 @@ export interface LinkSearchItem {
 // Form data derived from Link, with DateValue for expiration and required strings for optional fields
 type LinkFormFields = Omit<Link, 'id' | 'createdAt' | 'updatedAt' | 'expiration' | 'geo' | 'tags'> & {
   expiration: DateValue | undefined
+  // Local time of day for the expiration date, 'HH:MM' (23:59 = end of the day)
+  expirationTime: string
   geo: { country: string, url: string }[]
 }
 

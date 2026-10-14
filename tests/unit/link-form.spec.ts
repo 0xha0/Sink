@@ -17,6 +17,7 @@ describe('link form values', () => {
       comment: '',
       tags: [],
       expiration: undefined,
+      expirationTime: '23:59',
       google: '',
       apple: '',
       title: '',
@@ -40,10 +41,40 @@ describe('link form values', () => {
     })
 
     expect(values.expiration?.toString()).toBe('2030-01-02')
+    expect(values.expirationTime).toBe('12:00')
     expect(values.geo).toEqual([
       { country: 'us', url: ' https://us.example.com ' },
       { country: 'CA', url: 'https://ca.example.com' },
     ])
+  })
+})
+
+describe('link expiration time of day', () => {
+  function payloadFor(expirationTime: string) {
+    return normalizeLinkFormSubmitPayload({
+      ...createLinkFormInitialValues({}),
+      url: 'https://example.com',
+      slug: 'example',
+      expiration: new CalendarDate(2030, 1, 2),
+      expirationTime,
+    }, false)
+  }
+
+  it('expires at the chosen local time', () => {
+    expect(payloadFor('08:30').expiration).toBe(Math.floor(new Date(2030, 0, 2, 8, 30).getTime() / 1000))
+  })
+
+  it('keeps 23:59 as the end of the day and falls back to it for an unreadable time', () => {
+    const endOfDay = Math.floor(new Date(2030, 0, 2, 23, 59, 59).getTime() / 1000)
+    expect(payloadFor('23:59').expiration).toBe(endOfDay)
+    expect(payloadFor('').expiration).toBe(endOfDay)
+  })
+
+  it('reads a stored expiration back as the same date and time', () => {
+    const stored = Math.floor(new Date(2030, 0, 2, 8, 30).getTime() / 1000)
+    const values = createLinkFormInitialValues({ expiration: stored })
+    expect(normalizeLinkFormSubmitPayload({ ...values, url: 'https://example.com', slug: 'example' }, true).expiration)
+      .toBe(stored)
   })
 })
 

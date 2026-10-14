@@ -180,6 +180,16 @@ async function aiOg() {
                   />
                 </PopoverContent>
               </Popover>
+              <props.form.Field v-if="field.state.value" v-slot="{ field: timeField }" name="expirationTime">
+                <Input
+                  :id="`${idPrefix}-${timeField.name}`"
+                  :name="timeField.name"
+                  type="time"
+                  :aria-label="$t('links.form.expiration')"
+                  :model-value="timeField.state.value"
+                  @input="timeField.handleChange(($event.target as HTMLInputElement).value)"
+                />
+              </props.form.Field>
               <Button
                 v-if="field.state.value"
                 type="button"

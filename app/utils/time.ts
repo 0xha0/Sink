@@ -53,6 +53,24 @@ export function unix2date(unix: number) {
   return toCalendarDate(fromAbsolute(unix * 1000, getTimeZone()))
 }
 
+export const DEFAULT_EXPIRATION_TIME = '23:59'
+
+// The local time of day of a timestamp, 'HH:MM'
+export function unix2time(unix: number) {
+  const time = fromAbsolute(unix * 1000, getTimeZone())
+  return `${String(time.hour).padStart(2, '0')}:${String(time.minute).padStart(2, '0')}`
+}
+
+// A date at a local time of day ('HH:MM'); 23:59 keeps the end-of-day second (23:59:59)
+export function dateTime2unix(dateValue: DateValue | Date, time = DEFAULT_EXPIRATION_TIME) {
+  const date = dateValue instanceof Date ? new Date(dateValue) : dateValue.toDate(getTimeZone())
+  const match = /^(\d{1,2}):(\d{2})$/.exec(time)
+  const hours = match ? Math.min(+match[1]!, 23) : 23
+  const minutes = match ? Math.min(+match[2]!, 59) : 59
+  date.setHours(hours, minutes, hours === 23 && minutes === 59 ? 59 : 0, 0)
+  return Math.floor(date.getTime() / 1000)
+}
+
 export function getWeekdayNames(style: 'long' | 'short' | 'narrow' = 'short', locale?: string) {
   const formatter = new Intl.DateTimeFormat(locale, { weekday: style })
   // 2024-01-01 is Monday
