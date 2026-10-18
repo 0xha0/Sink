@@ -1,10 +1,7 @@
 <script setup lang="ts">
-// The site's root is a static page (public/index.html), served before the app. Reaching this route
-// means a client-side navigation to "/": load that page instead (/index.html, so the dev server
-// can't hand this route back to the app).
-onMounted(() => {
-  window.location.replace('/index.html')
-})
+// s.gatsby.icu has no home page: the server sends "/" to the dashboard (NUXT_PUBLIC_HOME_URL), and a
+// client-side navigation to "/" goes there too, as a full page load (through Cloudflare Access).
+await navigateTo('/dashboard', { external: true, replace: true })
 </script>
 
 <template>

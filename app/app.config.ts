@@ -1,7 +1,7 @@
 export default defineAppConfig({
   title: 'Sink',
   documentation: 'https://docs.sink.cool',
-  github: 'https://github.com/miantiao-me/sink',
+  github: 'https://github.com/0xha0/Sink/tree/gatsby', // this deployment's source (AGPL-3.0)
   coffee: 'https://sink.cool/coffee',
   twitter: 'https://sink.cool/x',
   telegram: 'https://sink.cool/telegram',

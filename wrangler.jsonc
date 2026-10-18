@@ -10,6 +10,8 @@
   "vars": {
     "NUXT_CF_ACCESS_TEAM_DOMAIN": "https://gatsby-icu.cloudflareaccess.com",
     "NUXT_CF_ACCESS_AUD": "54ea9623c6bd728082b25031b6b19a962547b08ba832184e8fa0864e84ce8125",
+    // no home page: "/" goes to the dashboard (its login is Cloudflare Access)
+    "NUXT_PUBLIC_HOME_URL": "https://s.gatsby.icu/dashboard",
     // 302 + no-store: a deleted or expired link stops redirecting in browsers at once
     "NUXT_REDIRECT_STATUS_CODE": "302",
     "NUXT_REDIRECT_NO_STORE": "true",
